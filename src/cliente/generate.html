@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BETOSTYLE</title>
+    <script src="./"></script>
+    <link rel="stylesheet" href="./generatepage.css" type="text/css">
+</head>
+<body>
+    <header id="header">
+        <div class="homebutton">BETOSTYLE</div>
+        <ul>
+            <li class="links"><a href="./index.html">Home</a></li>
+            <li class="links"><a href="#test-section">Test</a></li>
+            <li class="links"><a href="#generator-section">Generar</a></li>
+        </ul>
+    </header>
+    <section id="#generador">
+        <label>INPUT (PALABRAS CLAVE CON EL ESTILO DE ROPA)</label>
+        <form id="form" action="/generar-imagen" method="post">
+            <input type="text" name="prompt" id="prompt" placeholder="Aquí se introducirá el promt para generar las imagenes.">
+        </form>
+        <div class="contenedor-generaciones">
+        </div>
+        <p>Powered by DALLE-E API</p>
+    </section>
+
+    <script>
+        const form = document.querySelector('#form');
+        const input = document.querySelector('#prompt');
+
+        form.addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            const data = { prompt: input.value }
+
+            const options = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            }
+
+            fetch('/generar-imagen', options).then((response) => response.json()).then((data) => {
+                if (data?.filename) {
+                    const image = document.createElement('img');
+                    image.src = '/images/' + data.filename;
+                    document.querySelector('.contenedor-generaciones').appendChild(image);
+                }
+            })
+            .catch((error) => {
+                console.log("Error recibiendo la imagen", error.message);
+            })
+        });
+    </script>
+</body>
+</html>
